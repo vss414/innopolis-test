@@ -14,12 +14,12 @@ class m180111_035029_add_tables extends Migration
     {
         $this->createTable('resume', [
             'id' => $this->primaryKey(),
-            'title' => $this->string(255),
-            'description' => $this->text()
+            'title' => $this->string(255)->notNull(),
+            'description' => $this->text()->notNull()
         ]);
         $this->createTable('competence', [
             'id' => $this->primaryKey(),
-            'title' => $this->string(255),
+            'title' => $this->string(255)->notNull(),
         ]);
         $this->createIndex('unique_competence', 'competence', 'title', true);
         $this->createTable('resume_competence', [

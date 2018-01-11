@@ -9,6 +9,7 @@ return [
     'schemaMap' => [
         'pgsql'=> [
             'class'=>'yii\db\pgsql\Schema',
+            'defaultSchema' => 'public' //specify your schema here
         ]
     ]
 

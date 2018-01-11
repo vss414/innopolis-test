@@ -28,6 +28,7 @@ class Competence extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['title'], 'required'],
             [['title'], 'string', 'max' => 255],
             [['title'], 'unique'],
         ];
