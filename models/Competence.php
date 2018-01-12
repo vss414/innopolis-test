@@ -9,8 +9,10 @@ use Yii;
  *
  * @property int $id
  * @property string $title
+ * @property int $grade
+ * @property int $resume_id
  *
- * @property ResumeCompetence[] $resumeCompetences
+ * @property Resume $resume
  */
 class Competence extends \yii\db\ActiveRecord
 {
@@ -28,9 +30,12 @@ class Competence extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title'], 'required'],
+            [['title', 'grade', 'resume_id'], 'required'],
+//            [['grade', 'resume_id'], 'default', 'value' => null],
+            [['grade', 'resume_id'], 'integer'],
+            [['grade'], 'number', 'min' => 1, 'max' => 5],
             [['title'], 'string', 'max' => 255],
-            [['title'], 'unique'],
+            [['resume_id'], 'exist', 'skipOnError' => true, 'targetClass' => Resume::className(), 'targetAttribute' => ['resume_id' => 'id']],
         ];
     }
 
@@ -42,14 +47,16 @@ class Competence extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'title' => Yii::t('app', 'Title'),
+            'grade' => Yii::t('app', 'Grade'),
+            'resume_id' => Yii::t('app', 'Resume ID'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getResumeCompetences()
+    public function getResume()
     {
-        return $this->hasMany(ResumeCompetence::className(), ['competence_id' => 'id']);
+        return $this->hasOne(Resume::className(), ['id' => 'resume_id']);
     }
 }

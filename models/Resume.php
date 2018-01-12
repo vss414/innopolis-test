@@ -10,9 +10,9 @@ use Yii;
  * @property int $id
  * @property string $title
  * @property string $description
- * @property string $competences
+ * @property array $tmpCompetences
  *
- * @property ResumeCompetence[] $resumeCompetences
+ * @property Competence[] $resumeCompetences
  */
 class Resume extends \yii\db\ActiveRecord
 {
@@ -32,7 +32,7 @@ class Resume extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'description', 'competences'], 'required'],
+            [['title', 'description', 'tmpCompetences'], 'required'],
             [['description'], 'string'],
             [['title'], 'string', 'max' => 255],
         ];
@@ -47,16 +47,16 @@ class Resume extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'title' => Yii::t('app', 'Title'),
             'description' => Yii::t('app', 'Description'),
-            'competences' => Yii::t('app', 'Competences'),
+            'tmpCompetences' => Yii::t('app', 'Competences'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getResumeCompetences()
+    public function getCompetences()
     {
-        return $this->hasMany(ResumeCompetence::className(), ['resume_id' => 'id']);
+        return $this->hasMany(Competence::className(), ['resume_id' => 'id']);
     }
 
     public function saveCompetences($competences)
@@ -66,13 +66,10 @@ class Resume extends \yii\db\ActiveRecord
             if (!$competence) {
                 $competence = new Competence();
                 $competence->title = $title;
+                $competence->grade = 1;
+                $competence->resume_id = $this->id;
                 $competence->save();
             }
-
-            $resumeCompetence = new ResumeCompetence();
-            $resumeCompetence->resume_id = $this->id;
-            $resumeCompetence->competence_id = $competence->id;
-            $resumeCompetence->save();
         }
     }
 }

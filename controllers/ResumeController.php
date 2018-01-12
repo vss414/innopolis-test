@@ -75,7 +75,7 @@ class ResumeController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $competences = ArrayHelper::getColumn(Competence::find()->all(), 'title');
+        $competences = ArrayHelper::getColumn(Competence::find()->select('title')->distinct()->all(), 'title');
 
         return $this->render('create', [
             'model' => $model,
@@ -99,7 +99,7 @@ class ResumeController extends Controller
         );
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            ResumeCompetence::deleteAll(['resume_id' => $model->id]);
+            Competence::deleteAll(['resume_id' => $model->id]);
             $postData = Yii::$app->request->post('Resume');
             $model->saveCompetences($postData['competences']);
             return $this->redirect(['view', 'id' => $model->id]);
